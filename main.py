@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 import requests
 
 # Add this at the top of the file
-VERIFICATION_REQUIRED = os.getenv('VERIFICATION_REQUIRED', 'false').lower() == 'true'
+VERIFICATION_REQUIRED = os.getenv('VERIFICATION_REQUIRED', 'true').lower() == 'true'
 
 admin_ids = [6025969005, 6018060368]
 
@@ -258,8 +258,8 @@ async def get_token(user_id: int, bot_username: str) -> str:
     return shortened_link
 
 def shorten_url_link(url):
-    api_url = 'https://clickspay.in/api'
-    api_key = 'bbcbd18b768b0a22ba0081b567af29d51b45f2aa'
+    api_url = 'https://gplinks.com/api'
+    api_key = '89e6e36b347f3db3f187dda37290c5927e99c18a'
     params = {
         'api': api_key,
         'url': url
