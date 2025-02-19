@@ -28,6 +28,7 @@ logger = logging.getLogger(__name__)
 # Get the bot token and channel ID from environment variables
 TOKEN = os.getenv('BOT_TOKEN')
 CHANNEL_ID = os.getenv('CHANNEL_ID')
+WEBHOOK = os.getenv('WEBHOOK')
 
 # Define the /start command handler
 async def start(update: Update, context: CallbackContext) -> None:
@@ -36,6 +37,10 @@ async def start(update: Update, context: CallbackContext) -> None:
 
     # Check if the start command includes a token (for verification)
     if context.args:
+        text = update.message.text
+        if text.startswith("/start terabox-"):
+            await handle_terabox_link(update, context)
+            return
         token = context.args[0]
         user_data = users_collection.find_one({"user_id": user.id, "token": token})
 
@@ -77,10 +82,13 @@ async def start(update: Update, context: CallbackContext) -> None:
     await update.message.reply_photo(
         photo=photo_url,
         caption=(
-            "👋 **ℍ𝕖𝕝𝕝𝕠 𝔻𝕖𝕒𝕣!**\n\n"
-            "SEND ME ANY TERABOX LINK, I WILL SEND YOU DIRECT STREAM LINK WITHOUT TERABOX LOGIN OR ANY ADS​\n\n"
-            "**𝐈𝐦𝐩𝐨𝐫𝐭𝐚𝐧𝐭​​**\n\n"
-            "𝗨𝘀𝗲 𝗖𝗵𝗿𝗼𝗺𝗲 𝗙𝗼𝗿 𝗔𝗰𝗰𝗲𝘀𝘀 𝗠𝘆 𝗔𝗹𝗹 𝗳𝗲𝗮𝘁𝘂𝗿𝗲𝘀"
+            "👋 **Welcome to the TeraBox Online Player!** 🌟\n\n"
+        "Hello, dear user! I'm here to make your experience seamless and enjoyable.\n\n"
+        "✨ **What can I do for you?**\n"
+        "- Send me any TeraBox link, and I'll provide you with a direct streaming link without any ads!\n"
+        "- Enjoy uninterrupted access for 24 hours with a simple verification process.\n\n"
+        "🔑 **Ready to get started?** Just type your TeraBox link below, and let’s dive in!\n\n"
+        "Thank you for choosing TeraBox Online Player! ❤️"
         ),
         parse_mode='Markdown'
     )
@@ -168,11 +176,15 @@ async def handle_link(update: Update, context: CallbackContext) -> None:
         parsed_link = urllib.parse.quote(original_link, safe='')
         modified_link = f"https://terabox-player-one.vercel.app/?url=https://www.terabox.tech/play.html?url={parsed_link}"
         modified_url = f"https://terabox-player-one.vercel.app/?url=https://www.terabox.tech/play.html?url={parsed_link}"
+        link_parts = original_link.split('/')
+        link_id = link_parts[-1]
+        sharelink = f"https://t.me/share/url?url=https://t.me/TeraBox_OnlineBot?start=terabox-{link_id}"
 
         # Create a button with the modified link
         button = [
-            [InlineKeyboardButton("Stream Server 1", url=modified_link)],
-            [InlineKeyboardButton("Stream Server 2", url=modified_url)]
+            [InlineKeyboardButton("🌐Stream Server 1🌐", url=modified_link)],
+            [InlineKeyboardButton("🌐Stream Server 2🌐", url=modified_url)],
+            [InlineKeyboardButton("◀Share▶", url=sharelink)]
         ]
         reply_markup = InlineKeyboardMarkup(button)
 
@@ -258,8 +270,8 @@ async def get_token(user_id: int, bot_username: str) -> str:
     return shortened_link
 
 def shorten_url_link(url):
-    api_url = 'https://gplinks.com/api'
-    api_key = '89e6e36b347f3db3f187dda37290c5927e99c18a'
+    api_url = 'https://arolinks.com/api'
+    api_key = '90bcb2590cca0a2b438a66e178f5e90fea2dc8b4'
     params = {
         'api': api_key,
         'url': url
@@ -343,10 +355,59 @@ async def next_users(update: Update, context: CallbackContext) -> None:
     reply_markup = InlineKeyboardMarkup(keyboard)
     await query.edit_message_text("Click 'Next' to view more users", reply_markup=reply_markup)
     
+async def handle_terabox_link(update: Update, context: CallbackContext) -> None:
+    user = update.effective_user
+
+    if user.id in admin_ids:
+        # Admin ko verify karne ki zaroorat na ho
+        pass
+    else:
+        # User ko verify karne ki zaroorat hai
+        if VERIFICATION_REQUIRED and not await check_verification(user.id):
+            # User ko verify karne ki zaroorat hai
+            btn = [
+                [InlineKeyboardButton("Verify", url=await get_token(user.id, context.bot.username))],
+                [InlineKeyboardButton("How To Open Link & Verify", url="https://t.me/how_to_download_0011")]
+            ]
+            await update.message.reply_text(
+                text="🚨 <b>Token Expired!</b>\n\n"
+                     "<b>Timeout: 24 hours</b>\n\n"
+                     "Your access token has expired. Verify it to continue using the bot!\n\n"
+                     "<b>🔑 Why Tokens?</b>\n\n"
+                     "Tokens unlock premium features with a quick ad process. Enjoy 24 hours of uninterrupted access! 🌟\n\n"
+                     "<b>👉 Tap below to verify your token.</b>\n\n"
+                     "Thank you for your support! ❤️",
+                parse_mode='HTML',
+                reply_markup=InlineKeyboardMarkup(btn)
+            )
+            return
+
+    text = update.message.text
+    if text.startswith("/start terabox-"):
+        link_text = text.replace("/start terabox-", "")
+        link = f"https://terabox.com/s/{link_text}"
+        linkb = f"https://terafileshare.com/s/{link_text}"
+        slink = f"https://terabox-player-one.vercel.app/?url=https://www.terabox.tech/play.html?url={link}"
+        slinkb = f"https://terabox-player-one.vercel.app/?url=https://www.terabox.tech/play.html?url={linkb}"
+        share = f"https://t.me/share/url?url=https://t.me/TeraBox_OnlineBot?start=terabox-{link_text}"
+
+        button = [
+            [InlineKeyboardButton("🌐Stream Server 1🌐", url=slink)],
+            [InlineKeyboardButton("🌐Stream Server 2🌐", url=slinkb)],
+            [InlineKeyboardButton("◀Share▶", url=share)]
+        ]
+        reply_markup = InlineKeyboardMarkup(button)
+
+        await update.message.reply_text(
+            f"👇👇 YOUR VIDEO LINK IS READY, USE THESE SERVERS 👇👇\n\n♥ 👇Your Stream Link👇 ♥\n",
+            reply_markup=reply_markup,
+            parse_mode='Markdown'
+        )
+        
 def main() -> None:
     # Get the port from the environment variable or use default
     port = int(os.environ.get('PORT', 8080))  # Default to port 8080
-    webhook_url = f"https://total-jessalyn-toxiccdeveloperr-36046375.koyeb.app/{TOKEN}"  # Replace with your server URL
+    webhook_url = f"{WEBHOOK}{TOKEN}"  # Replace with your server URL
 
     # Create the Application and pass it your bot's token
     app = ApplicationBuilder().token(TOKEN).build()
