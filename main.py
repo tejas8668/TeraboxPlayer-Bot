@@ -200,7 +200,7 @@ async def handle_link(update: Update, context: CallbackContext) -> None:
 
         # Send the message with the link, copyable link, and button
         await update.message.reply_text(
-            f"👇👇 YOUR VIDEO LINK IS READY, USE THESE SERVERS 👇👇\n\n♥ 👇Your Stream Link👇 ♥\n",
+            f"👇👇 YOUR VIDEO LINK IS READY, USE THESE SERVERS 👇👇\n\nOriginal Link\n{original_link}\n\n♥ 👇Your Stream Link👇 ♥\n",
             reply_markup=reply_markup,
             parse_mode='Markdown'
         )
@@ -399,7 +399,7 @@ async def handle_terabox_link(update: Update, context: CallbackContext) -> None:
         reply_markup = InlineKeyboardMarkup(button)
 
         await update.message.reply_text(
-            f"👇👇 YOUR VIDEO LINK IS READY, USE THESE SERVERS 👇👇\n\n♥ 👇Your Stream Link👇 ♥\n",
+            f"👇👇 YOUR VIDEO LINK IS READY, USE THESE SERVERS 👇👇\n\nOriginal Link\n{original_link}\n\n♥ 👇Your Stream Link👇 ♥\n",
             reply_markup=reply_markup,
             parse_mode='Markdown'
         )
