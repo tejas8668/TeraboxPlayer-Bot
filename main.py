@@ -399,7 +399,7 @@ async def handle_terabox_link(update: Update, context: CallbackContext) -> None:
         reply_markup = InlineKeyboardMarkup(button)
 
         await update.message.reply_text(
-            f"👇👇 YOUR VIDEO LINK IS READY, USE THESE SERVERS 👇👇\n\nOriginal Link\n{original_link}\n\n♥ 👇Your Stream Link👇 ♥\n",
+            f"👇👇 YOUR VIDEO LINK IS READY, USE THESE SERVERS 👇👇\n\nOriginal Link\n{link}\n\nOriginal Link 2\n{linkb}♥ 👇Your Stream Link👇 ♥\n",
             reply_markup=reply_markup,
             parse_mode='Markdown'
         )
