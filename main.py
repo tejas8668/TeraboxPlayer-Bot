@@ -174,8 +174,8 @@ async def handle_link(update: Update, context: CallbackContext) -> None:
         # User sent a link
         original_link = update.message.text
         parsed_link = urllib.parse.quote(original_link, safe='')
-        modified_link = f"https://terabox-player-one.vercel.app/?url=https://www.terabox.tech/play.html?url={parsed_link}"
-        modified_url = f"https://terabox-player-one.vercel.app/?url=https://www.terabox.tech/play.html?url={parsed_link}"
+        modified_link = f"https://terabox-player-one.vercel.app/?url=https://player.terabox.tech?url={parsed_link}"
+        modified_url = f"https://terabox-player-one.vercel.app/?url=https://player.terabox.tech?url={parsed_link}"
         link_parts = original_link.split('/')
         link_id = link_parts[-1]
         sharelink = f"https://t.me/share/url?url=https://t.me/TeraBox_OnlineBot?start=terabox-{link_id}"
