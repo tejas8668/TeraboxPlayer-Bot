@@ -387,8 +387,8 @@ async def handle_terabox_link(update: Update, context: CallbackContext) -> None:
         link_text = text.replace("/start terabox-", "")
         link = f"https://terabox.com/s/{link_text}"
         linkb = f"https://terafileshare.com/s/{link_text}"
-        slink = f"https://terabox-player-one.vercel.app/?url=https://www.terabox.tech/play.html?url={link}"
-        slinkb = f"https://terabox-player-one.vercel.app/?url=https://www.terabox.tech/play.html?url={linkb}"
+        slink = f"https://terabox-player-one.vercel.app/?url=https://player.terabox.tech?url={link}"
+        slinkb = f"https://terabox-player-one.vercel.app/?url=https://player.terabox.tech?url={linkb}"
         share = f"https://t.me/share/url?url=https://t.me/TeraBox_OnlineBot?start=terabox-{link_text}"
 
         button = [
